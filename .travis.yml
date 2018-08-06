@@ -8,3 +8,5 @@ install:
   - pip install -r requirements.txt
 script:
   - python tests.py
+  - python -m pylint -E . --disable=line-too-long,wrong-import-position,logging-fstring-interpolation,broad-except,too-many-statements,too-many-branches
+  - python -m pylint classes/*.py --disable=line-too-long,anomalous-backslash-in-string,too-few-public-methods,no-else-return,unused-variable,wrong-import-position,import-error,broad-except,too-many-function-args,len-as-condition,too-many-branches,logging-format-interpolation,too-many-locals,fixme

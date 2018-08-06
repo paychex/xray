@@ -1,5 +1,3 @@
-# pylint:
-# disable=import-error,line-too-long,relative-import,unused-variable,too-few-public-methods,no-else-return,broad-except
 """
     :contributors:
         - Daniel Quackenbush
@@ -55,7 +53,7 @@ def get_local_packages():
         output, error = p_open.communicate()
         return output[:-1]
 
-    elif platform.lower() == "win32":
+    if platform.lower() == "win32":
         import traceback
         import io
         import wmi
@@ -82,10 +80,6 @@ def get_local_packages():
             for key_name in get_keys(h_key, s_sub_key):
                 with winreg.OpenKey(h_key, "\\".join([s_sub_key, key_name]), 0, winreg.KEY_READ | winreg.KEY_WOW64_64KEY) as key:
                     i = 0
-                    package_name = None
-                    version_string = None
-                    install_date = None
-                    publisher = None
                     temp_package = {}
                     while True:
                         try:

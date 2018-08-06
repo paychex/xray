@@ -1,5 +1,3 @@
-# pylint:
-# disable=import-error,line-too-long,logging-format-interpolation,len-as-condition,broad-except
 """
     :contributors:
         - Daniel Quackenbush

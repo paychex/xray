@@ -1,5 +1,3 @@
-# pylint:
-# disable=import-error,line-too-long,logging-format-interpolation,too-few-public-methods
 """
     :contributors:
         - Daniel Quackenbush

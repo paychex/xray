@@ -8,8 +8,8 @@ X-RAY captures and records software and mount points of a given host. Utilizing 
 # Install
 ---
 To install first the following procedure should be followed:
- 1. ensure that the server has Python 3.6+
-  a. Execute `pip3 install -r requirements.txt`
+ 1. ensure that the server has Python 3.6+<br>
+  a. Execute `pip3 install -r requirements.txt`<br>
   b. On Windows Hosts only - `pip3 install pywin32`
  2. Create a mongo database, and python file with the variable "CONNECTION_STRING" with the connection string of the database.
    File Structure:

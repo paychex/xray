@@ -45,9 +45,9 @@ Minimum Data
 # Execution
 ---
 To execute the module either
-* On a host execute the main.py with the respective flags (use -h for help).
+* On a host execute the `__init__.py` with the respective flags (use -h for help).
 ```
-usage: main.py [-h] [-p PACKAGES] [-s SERVER] [-m MOUNTS] [-d] [-t]
+usage: __init__.py [-h] [-p PACKAGES] [-s SERVER] [-m MOUNTS] [-d] [-t]
                    [--prod] [--sleep]
 
 A module to parse and record host pacakges to MongoDB

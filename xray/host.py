@@ -1,6 +1,6 @@
+# pylint: disable=R0903
 """
-    :contributors:
-        - Daniel Quackenbush
+A file to manage host definitions
 """
 
 from datetime import datetime

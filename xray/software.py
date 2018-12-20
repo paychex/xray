@@ -1,17 +1,15 @@
+# pylint: disable=R0903,C1801,W0703,unused-import
 """
-    :contributors:
-        - Daniel Quackenbush
+        A file to manage the capturing and storing of software
 """
-
-import logging
 import json
-import os
-from sys import platform, path
+import logging
+from sys import platform
 from subprocess import Popen, PIPE
+from dateutil import parser
 
-# Created Classes
-path.append(os.path.dirname(__file__))
-from version import Version
+# External Classes
+from xray.version import Version
 
 
 class Software():
@@ -46,11 +44,11 @@ def get_local_packages():
     package_names = []
 
     if platform.lower() == "linux" or platform.lower() == "linux2":
-        query = '\{"name":"%{NAME}","version":"%{VERSION}","install_date":"%{installtime:date}","vendor":"%{VENDOR}"\},'
+        query = r'\{"name":"%{NAME}","version":"%{VERSION}","install_date":"%{installtime:date}","vendor":"%{VENDOR}"\},'
         command = f"rpm -qa --qf '{query}'"
         command = command.split()
         p_open = Popen(command, stdout=PIPE, stderr=PIPE, encoding="utf8")
-        output, error = p_open.communicate()
+        output, _ = p_open.communicate()
         return output[:-1]
 
     if platform.lower() == "win32":
@@ -107,9 +105,8 @@ def get_local_packages():
             packages)
         return packages[:-1]
 
-    else:
-        raise Exception(
-            f"Script is meant for linux and Windows exclusivly and you are running {platform}")
+    raise Exception(
+        f"Script is meant for linux and Windows exclusivly and you are running {platform}")
 
 
 def analyze_packages(output):
@@ -140,12 +137,19 @@ def analyze_packages(output):
             package_name = package.get('name', None)
             if package_name is not None and package_name.strip(
             ).lower() != "none" and "\\" not in package_name:
-                software = Software(package_name, package.get('vendor', None))
+                if not package.get('install_date').strip():
+                    package['install_date'] = '19700101'
+                if not package.get('version', '').strip():
+                    package['version'] = '-1'
+                if not package.get('vendor', '').strip():
+                    package['vendor'] = 'n/a'
+
+                software = Software(package_name, package.get('vendor'))
+
                 version = Version(
-                    package.get('version', None),
+                    package.get('version'),
                     package.get('install_date')
                 )
-
                 temp_software = check_sofware_if_exists(
                     package_name, package_names, packages)
                 if temp_software is not None:

@@ -2,3 +2,6 @@ pymongo
 pylint
 python-dateutil
 wmi
+responses
+coverage
+pytz

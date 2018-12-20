@@ -1,6 +1,5 @@
 """
-    :contributors:
-        - Daniel Quackenbush
+A file to manage software versions
 """
 
 

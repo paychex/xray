@@ -7,6 +7,7 @@ sudo: true
 install:
   - pip install -r requirements.txt
 script:
-  - python tests.py
-  - python -m pylint -E . --disable=R,C,W
-  - python -m pylint classes/*.py --disable=R,C,W,too-many-function-args,import-error
+  - python -m unittest discover -s tests/
+  - coverage run --source=xray/ -m unittest discover -s tests/ && coverage report -m
+  - python -m pylint -E main.py --disable=R,C,W
+  - python -m pylint xray/*.py --disable=R,C,W,too-many-function-args,import-error

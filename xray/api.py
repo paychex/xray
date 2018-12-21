@@ -193,7 +193,7 @@ class Api():
                         'name',
                         "-1"),
                     "install_date": parse(
-                        version['install_date']).isoformat(),
+                        version['install_date']).isoformat() if version.get('install_date') else parse('1970-01-01').isoformat(),
                     "removal_date": parse(
                         version['removal_date']).isoformat() if version.get(
                             'removal_date',

@@ -174,7 +174,7 @@ class Api():
 
     def upsert(self):
         body = self.__get_diff()
-        pool = Pool(50)
+        pool = Pool(2)
         results = [result for result in pool.map(self._update, body) if result]
         logging.debug("Total runtime %s", time() - self.start)
         return results

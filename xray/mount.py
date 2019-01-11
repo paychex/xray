@@ -1,8 +1,7 @@
+# pylint: disable=R0903,C1801,W0703
 """
-    :contributors:
-        - Daniel Quackenbush
+    A file to manage the capturing and storing of mounts
 """
-
 from sys import platform
 from subprocess import Popen, PIPE
 import json
@@ -51,7 +50,7 @@ def get_local_mounts():
         p_open = Popen(command, stdout=PIPE, stderr=PIPE, encoding='utf-8')
         temp_output, error = p_open.communicate()
         if len(error) > 0:
-            logging.error("X-RAY Local Mount Error: {}".format(error))
+            logging.error("X-RAY Local Mount Error: %s", error)
         else:
             if len(temp_output) > 0:
                 temp_json = json.loads(temp_output)
@@ -82,7 +81,7 @@ def get_local_mounts():
         p_open = Popen(command, stdout=PIPE, stderr=PIPE, encoding='utf-8')
         temp_output, error = p_open.communicate()
         if len(error) > 0:
-            logging.error("X-RAY NAS Mount Error: {}".format(error))
+            logging.error("X-RAY NAS Mount Error: %s", error)
         else:
             if len(temp_output) > 0:
                 temp_json = json.loads(temp_output)

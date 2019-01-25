@@ -104,7 +104,9 @@ class Api():
 
         # First attempt to see if record exists
         temp_name = quote(segment.get('name'))
-        url = f"{self.endpoint}/software?name={temp_name}&version={segment['version']}&vm={self.id}"
+        temp_vendor = quote(segment['vendor']) if segment.get('vendor', None) else ''
+        temp_version = quote(segment['version']) if segment.get('version', None) else ''
+        url = f"{self.endpoint}/software?name={temp_name}&version={temp_version}&vm={self.id}&vendor={temp_vendor}"
         logging.debug("Getting software id from url %s", url)
         request = get(url, verify=False).json()
 
@@ -191,9 +193,9 @@ class Api():
                         software.get('vendor')),
                     "version": version.get(
                         'name',
-                        "-1"),
+                        None),
                     "install_date": parse(
-                        version['install_date']).isoformat() if version.get('install_date') else parse('1970-01-01').isoformat(),
+                        version['install_date']).isoformat() if version.get('install_date') else None,
                     "removal_date": parse(
                         version['removal_date']).isoformat() if version.get(
                             'removal_date',

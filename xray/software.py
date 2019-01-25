@@ -140,7 +140,7 @@ def analyze_packages(output):
                 if not package.get('install_date').strip():
                     package['install_date'] = '19700101'
                 if not package.get('version', '').strip():
-                    package['version'] = '-1'
+                    package['version'] = None
                 if not package.get('vendor', '').strip():
                     package['vendor'] = 'n/a'
 

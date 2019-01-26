@@ -91,7 +91,7 @@ class APITestCase(TestCase):
                 "removal_date": None,
             }]}, status=200)
 
-        add(GET, "http://127.0.0.1/api/v1/software?name=Test%20Software&version=70&vm=4",
+        add(GET, "http://127.0.0.1/api/v1/software?name=Test%20Software&version=70&vm=4&vendor=Paychex",
             json={'count': 1, 'results': [{
                 "url": "http://127.0.0.1/api/v1//software/4/",
                 "name": "Test Software",
@@ -101,7 +101,7 @@ class APITestCase(TestCase):
                 "removal_date": None,
             }]}, status=200)
 
-        add(GET, "http://127.0.0.1/api/v1/software?name=Another%20Software&version=-1&vm=4",
+        add(GET, "http://127.0.0.1/api/v1/software?name=Another%20Software&version=&vm=4&vendor=Paychex",
             json={'count': 0, 'results': [{}]}, status=200)
 
         def request_callback(request):
@@ -156,7 +156,7 @@ class APITestCase(TestCase):
             }]}, status=200)
         add(GET, 'http://127.0.0.1/api/v1/software?vm=4',
             json={'count': 1, 'results': [{
-                "url": "http://127.0.0.1/api/v1//software/4/",
+                "url": "http://127.0.0.1/api/v1/software/4/",
                 "name": "Test Software",
                 "vendor": "Paychex",
                 "version": "70",
@@ -164,7 +164,7 @@ class APITestCase(TestCase):
                 "removal_date": None,
             }]}, status=200)
 
-        add(GET, "http://127.0.0.1/api/v1/software?name=Test%20Software&version=70&vm=4",
+        add(GET, "http://127.0.0.1/api/v1/software?name=Test%20Software&version=70&vm=4&vendor=Paychex",
             json={'count': 1, 'results': [{
                 "url": "http://127.0.0.1/api/v1//software/4/",
                 "name": "Test Software",
@@ -173,7 +173,7 @@ class APITestCase(TestCase):
                 "install_date": "2018-12-14T00:00:00Z",
                 "removal_date": None,
             }]}, status=200)
-        add(GET, "http://127.0.0.1/api/v1/software?name=Another%20Software&version=70&vm=4",
+        add(GET, "http://127.0.0.1/api/v1/software?name=Another%20Software&version=70&vm=4&vendor=Paychex",
             json={'count': 0, 'results': []}, status=200)
 
         def request_callback(request):
@@ -228,7 +228,7 @@ class APITestCase(TestCase):
                 "install_date": "2018-12-14T00:00:00Z",
                 "removal_date": None,
             }]}, status=200)
-        add(GET, 'http://127.0.0.1/api/v1/software?name=Test%20Software&version=70&vm=4',
+        add(GET, 'http://127.0.0.1/api/v1/software?name=Test%20Software&version=70&vm=4&vendor=Paychex',
             json={'count': 1, 'results': [{
                 "url": "http://127.0.0.1/api/v1/software/4/",
                 "name": "Test Software",
@@ -264,7 +264,44 @@ class APITestCase(TestCase):
             ]
         }).upsert()
         self.assertEqual(api[0]['install_date'], '2018-12-30T00:00:00+00:00')
+    
+    @activate
+    @patch.dict('os.environ', {'username': 'fake', 'password': 'pass'})
+    def test_updating_software_with_no_version_or_vendor(self):
+        add(GET, 'http://127.0.0.1/api/v1/virtualmachine?name=test',
+            json={'count': 1, 'results': [{
+                "url": "https:///127.0.0.1/api/v1/virtualmachine/4/"
+            }]}, status=200)
+        add(GET, 'http://127.0.0.1/api/v1/software?vm=4',
+            json={'count': 0, 'results': []}, status=200)
+        add(GET, 'http://127.0.0.1/api/v1/software?name=Test%20Software&version=&vm=4&vendor=',
+            json={'count': 0, 'results': []}, status=200)
+        def request_callback(request):
+            from json import dumps, loads
+            return (200, {}, request.body)
 
+        add_callback(
+            POST, 'http://127.0.0.1/api/v1/software/',
+            callback=request_callback,
+            content_type='application/json',
+        )
+
+        api = Api(endpoint="http://127.0.0.1/api/v1", host_dict={
+            "name": "test",
+            "software": [
+                {
+                    "package_name": "Test Software",
+                    "versions": [
+                        {
+                            "install_date": "2018-12-30T00:00:00Z",
+                            "name": None,
+                        }
+                    ]
+                }
+            ]
+        }).upsert()
+        self.assertFalse(api[0]['version'])
+       
     @activate
     @patch.dict('os.environ', {'username': 'fake', 'password': 'pass'})
     def test_no_change(self):
@@ -281,7 +318,7 @@ class APITestCase(TestCase):
                 "install_date": "2018-12-14T00:00:00Z",
                 "removal_date": None,
             }]}, status=200)
-        add(GET, 'http://127.0.0.1/api/v1/software?name=Test%20Software&version=70&vm=4',
+        add(GET, 'http://127.0.0.1/api/v1/software?name=Test%20Software&version=70&vm=4&vendor=Paychex',
             json={'count': 1, 'results': [{
                 "url": "http://127.0.0.1/api/v1//software/4/",
                 "name": "Test Software",

@@ -5,3 +5,4 @@ wmi
 responses
 coverage
 pytz
+mock

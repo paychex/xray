@@ -1,7 +1,6 @@
 from unittest import TestCase
 from xray.software import Software, check_sofware_if_exists, analyze_packages
 
-
 class SoftwareTestCase(TestCase):
     def test_software_class(self):
         package_name = "test"
@@ -33,3 +32,8 @@ class SoftwareTestCase(TestCase):
         self.assertTrue(packages[0]['package_name'] == 'nfs-utils')
         packages = analyze_packages(software_back)
         self.assertTrue(packages[0]['package_name'] == 'nfs-utils')
+    
+    def test_analyze_version_none(self):
+        software_both = '({"name":"nfs-utils","install_date":"Tue 03 Jul 2018 09:28:11 AM EDT","vendor":"CentOS"})'
+        packages = analyze_packages(software_both)
+        self.assertFalse(packages[0]['versions'][0]['name'])

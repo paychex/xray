@@ -104,7 +104,9 @@ class Api():
 
         # First attempt to see if record exists
         temp_name = quote(segment.get('name'))
-        url = f"{self.endpoint}/software?name={temp_name}&version={segment['version']}&vm={self.id}"
+        temp_vendor = quote(segment['vendor']) if segment.get('vendor', None) else ''
+        temp_version = quote(segment['version']) if segment.get('version', None) else ''
+        url = f"{self.endpoint}/software?name={temp_name}&version={temp_version}&vm={self.id}&vendor={temp_vendor}"
         logging.debug("Getting software id from url %s", url)
         request = get(url, verify=False).json()
 
@@ -174,7 +176,7 @@ class Api():
 
     def upsert(self):
         body = self.__get_diff()
-        pool = Pool(50)
+        pool = Pool(2)
         results = [result for result in pool.map(self._update, body) if result]
         logging.debug("Total runtime %s", time() - self.start)
         return results
@@ -191,9 +193,9 @@ class Api():
                         software.get('vendor')),
                     "version": version.get(
                         'name',
-                        "-1"),
+                        None),
                     "install_date": parse(
-                        version['install_date']).isoformat(),
+                        version['install_date']).isoformat() if version.get('install_date') else None,
                     "removal_date": parse(
                         version['removal_date']).isoformat() if version.get(
                             'removal_date',
